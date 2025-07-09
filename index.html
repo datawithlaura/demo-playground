@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4i Digital | Playground de Verificación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar-link.active {
+            background-color: #e0f2fe; /* light-blue-100 */
+            color: #0c4a6e; /* cyan-800 */
+            font-weight: 600;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        video {
+            transform: scaleX(-1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-full md:w-64 bg-white border-r border-gray-200 p-6">
+            <div class="flex items-center space-x-3 mb-8">
+                <!-- Placeholder for 4i Digital Logo -->
+                <img src="https://placehold.co/40x40/0B2A4A/FFFFFF?text=4i" alt="4i Digital Logo" class="rounded-md">
+                <h1 class="text-xl font-bold text-gray-800">4i Digital</h1>
+            </div>
+            <nav id="sidebar-nav">
+                <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Verificaciones</h2>
+                <a href="#liveness" class="sidebar-link flex items-center px-4 py-2.5 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" /></svg>
+                    Liveness
+                </a>
+                <a href="#facematch" class="sidebar-link flex items-center px-4 py-2.5 mt-1 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
+                    Face Match
+                </a>
+                <a href="#docv" class="sidebar-link flex items-center px-4 py-2.5 mt-1 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" /></svg>
+                    Verificación de Documentos
+                </a>
+                <a href="#age" class="sidebar-link flex items-center px-4 py-2.5 mt-1 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                     <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                    Detector de Edad
+                </a>
+                <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mt-6 mb-3">Avanzado</h2>
+                <a href="#device" class="sidebar-link flex items-center px-4 py-2.5 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" /></svg>
+                    Inteligencia de Dispositivo
+                </a>
+                <a href="#vc" class="sidebar-link flex items-center px-4 py-2.5 mt-1 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                    Credenciales Verificables
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 md:p-10">
+            <!-- Liveness Tab -->
+            <div id="liveness" class="tab-content">
+                <h1 class="text-3xl font-bold text-gray-900">Detección de Vida</h1>
+                <p class="mt-2 text-gray-600">Verifique la presencia del usuario con un escaneo de video rápido. Siga las instrucciones en pantalla.</p>
+                <div class="mt-8 p-6 bg-white rounded-xl shadow-md">
+                    <div id="liveness-start">
+                        <p class="text-center text-gray-600 mb-4">Haga clic a continuación para iniciar la cámara y comenzar la prueba de vida.</p>
+                        <button id="start-liveness-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">Iniciar Prueba de Vida</button>
+                    </div>
+                    <div id="liveness-capture" class="hidden">
+                        <div class="w-full max-w-md mx-auto bg-gray-900 rounded-lg overflow-hidden">
+                            <video id="liveness-video" autoplay playsinline class="w-full"></video>
+                        </div>
+                        <p id="liveness-prompt" class="text-center font-semibold text-lg mt-4 text-blue-600">Por favor, mire directamente a la cámara.</p>
+                        <div class="mt-4 text-center">
+                            <p class="text-sm text-gray-500">Simulando prueba de vida...</p>
+                        </div>
+                    </div>
+                    <div id="liveness-result" class="hidden text-center">
+                        <!-- Result content will be injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Face Match Tab -->
+            <div id="facematch" class="tab-content">
+                <h1 class="text-3xl font-bold text-gray-900">Face Match</h1>
+                <p class="mt-2 text-gray-600">Compare una selfie en vivo con una foto de un documento de identidad.</p>
+                <div class="mt-8 p-6 bg-white rounded-xl shadow-md">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <!-- ID Upload -->
+                        <div id="facematch-step1">
+                            <h3 class="font-semibold text-lg mb-2">Paso 1: Subir Foto de Identificación</h3>
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                                <img id="facematch-id-preview" class="hidden w-48 h-auto mx-auto mb-4 rounded" />
+                                <svg id="facematch-id-placeholder" class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                                <label for="facematch-id-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
+                                    <span>Subir un archivo</span>
+                                    <input id="facematch-id-upload" type="file" class="sr-only" accept="image/*">
+                                </label>
+                                <p class="text-xs text-gray-500">PNG, JPG, GIF hasta 10MB</p>
+                            </div>
+                        </div>
+                        <!-- Selfie Capture -->
+                        <div id="facematch-step2">
+                            <h3 class="font-semibold text-lg mb-2">Paso 2: Tomar una Selfie</h3>
+                            <div class="bg-gray-900 rounded-lg overflow-hidden">
+                                <video id="facematch-video" autoplay playsinline class="w-full"></video>
+                            </div>
+                            <canvas id="facematch-canvas" class="hidden"></canvas>
+                            <button id="facematch-capture-btn" class="mt-4 w-full bg-gray-700 text-white font-bold py-3 px-4 rounded-lg hover:bg-gray-800 transition-colors" disabled>Capturar Selfie</button>
+                        </div>
+                    </div>
+                    <div class="mt-6 text-center">
+                        <button id="facematch-verify-btn" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-300" disabled>Verificar Coincidencia</button>
+                    </div>
+                     <div id="facematch-result" class="hidden mt-6 text-center"></div>
+                </div>
+            </div>
+
+            <!-- Document Verification Tab -->
+            <div id="docv" class="tab-content">
+                <h1 class="text-3xl font-bold text-gray-900">Verificación de Documentos</h1>
+                <p class="mt-2 text-gray-600">Verifique documentos oficiales de instituciones latinoamericanas.</p>
+                <div class="mt-8 p-6 bg-white rounded-xl shadow-md">
+                    <div>
+                        <label for="docv-country" class="block text-sm font-medium text-gray-700">Seleccionar País</label>
+                        <select id="docv-country" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                            <option value="mx">México (INE)</option>
+                            <option value="ar">Argentina (DNI)</option>
+                            <option value="co">Colombia (Cédula)</option>
+                            <option value="pe">Perú (DNI)</option>
+                        </select>
+                    </div>
+                    <div class="mt-6 grid md:grid-cols-2 gap-6">
+                        <div>
+                             <label for="docv-front-upload" class="block text-sm font-medium text-gray-700 mb-2">Frente del Documento</label>
+                             <input id="docv-front-upload" type="file" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+                        </div>
+                        <div>
+                            <label for="docv-back-upload" class="block text-sm font-medium text-gray-700 mb-2">Reverso del Documento</label>
+                            <input id="docv-back-upload" type="file" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+                        </div>
+                    </div>
+                    <div class="mt-8 text-center">
+                        <button id="docv-verify-btn" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors">Verificar Documento</button>
+                    </div>
+                    <div id="docv-result" class="hidden mt-6"></div>
+                </div>
+            </div>
+
+            <!-- Age Detector Tab -->
+            <div id="age" class="tab-content">
+                <h1 class="text-3xl font-bold text-gray-900">Detector de Edad</h1>
+                <p class="mt-2 text-gray-600">Estime la edad de un usuario a partir de una foto en vivo.</p>
+                 <div class="mt-8 p-6 bg-white rounded-xl shadow-md">
+                    <div id="age-start">
+                        <p class="text-center text-gray-600 mb-4">Habilite su cámara para estimar la edad.</p>
+                        <button id="start-age-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">Iniciar Cámara</button>
+                    </div>
+                    <div id="age-capture" class="hidden">
+                        <div class="w-full max-w-md mx-auto bg-gray-900 rounded-lg overflow-hidden">
+                            <video id="age-video" autoplay playsinline class="w-full"></video>
+                        </div>
+                        <canvas id="age-canvas" class="hidden"></canvas>
+                        <div class="mt-4 text-center">
+                            <button id="age-capture-btn" class="bg-gray-700 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-800 transition-colors">Estimar Edad</button>
+                        </div>
+                    </div>
+                    <div id="age-result" class="hidden text-center mt-6"></div>
+                </div>
+            </div>
+
+            <!-- Device Intelligence Tab -->
+            <div id="device" class="tab-content">
+                <h1 class="text-3xl font-bold text-gray-900">Inteligencia de Dispositivo</h1>
+                <p class="mt-2 text-gray-600">Recopile información sobre el dispositivo del usuario para la evaluación de riesgos.</p>
+                <div class="mt-8 p-6 bg-white rounded-xl shadow-md">
+                    <div id="device-info" class="space-y-4">
+                        <!-- Device info will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Verifiable Credentials Tab -->
+            <div id="vc" class="tab-content">
+                <h1 class="text-3xl font-bold text-gray-900">Credenciales Verificables</h1>
+                <p class="mt-2 text-gray-600">Simule la emisión y verificación de una credencial digital.</p>
+                <div class="mt-8 p-6 bg-white rounded-xl shadow-md">
+                    <h3 class="font-semibold text-lg mb-2">1. Emitir Credencial de Prueba</h3>
+                    <p class="text-sm text-gray-600 mb-4">Haga clic para generar una credencial simulada de "Identidad Verificada" para un usuario.</p>
+                    <button id="vc-issue-btn" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">Emitir Credencial</button>
+                    <div id="vc-issued-result" class="hidden mt-4">
+                        <h4 class="font-semibold">Credencial Emitida (formato JWT):</h4>
+                        <pre class="bg-gray-100 text-xs p-4 rounded-md overflow-x-auto text-gray-800"><code id="vc-jwt-code"></code></pre>
+                        <button id="vc-copy-btn" class="mt-2 text-sm text-blue-600 hover:underline">Copiar al Portapapeles</button>
+                    </div>
+                </div>
+                <div class="mt-6 p-6 bg-white rounded-xl shadow-md">
+                    <h3 class="font-semibold text-lg mb-2">2. Verificar Credencial</h3>
+                    <p class="text-sm text-gray-600 mb-4">Pegue un JWT de credencial a continuación para simular la verificación.</p>
+                    <textarea id="vc-verify-input" rows="5" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Pegue el JWT de prueba aquí..."></textarea>
+                    <button id="vc-verify-btn" class="mt-4 bg-gray-700 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-800 transition-colors">Verificar</button>
+                    <div id="vc-verified-result" class="hidden mt-4"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            // --- Navigation Logic ---
+            function switchTab(hash) {
+                sidebarLinks.forEach(link => {
+                    if (link.getAttribute('href') === hash) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+                tabContents.forEach(tab => {
+                    if (`#${tab.id}` === hash) {
+                        tab.classList.add('active');
+                    } else {
+                        tab.classList.remove('active');
+                    }
+                });
+            }
+
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const hash = e.currentTarget.getAttribute('href');
+                    window.location.hash = hash;
+                });
+            });
+
+            window.addEventListener('hashchange', () => {
+                const hash = window.location.hash || '#liveness';
+                switchTab(hash);
+            });
+
+            // Initial tab setup
+            const initialHash = window.location.hash || '#liveness';
+            switchTab(initialHash);
+
+            // --- Camera Utility ---
+            async function startCamera(videoElementId) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                    const videoEl = document.getElementById(videoElementId);
+                    videoEl.srcObject = stream;
+                    return stream;
+                } catch (err) {
+                    console.error("Error accessing camera:", err);
+                    alert("No se pudo acceder a la cámara. Por favor, verifique los permisos.");
+                    return null;
+                }
+            }
+
+            // --- Liveness Logic ---
+            const startLivenessBtn = document.getElementById('start-liveness-btn');
+            const livenessCaptureDiv = document.getElementById('liveness-capture');
+            const livenessStartDiv = document.getElementById('liveness-start');
+            const livenessResultDiv = document.getElementById('liveness-result');
+            const livenessPrompt = document.getElementById('liveness-prompt');
+
+            startLivenessBtn.addEventListener('click', async () => {
+                livenessStartDiv.classList.add('hidden');
+                livenessCaptureDiv.classList.remove('hidden');
+                livenessResultDiv.classList.add('hidden');
+
+                const stream = await startCamera('liveness-video');
+                if (!stream) {
+                    livenessStartDiv.classList.remove('hidden');
+                    livenessCaptureDiv.classList.add('hidden');
+                    return;
+                }
+
+                // Simulate liveness prompts
+                setTimeout(() => livenessPrompt.textContent = 'Por favor, gire la cabeza hacia la derecha.', 2000);
+                setTimeout(() => livenessPrompt.textContent = 'Ahora gire la cabeza hacia la izquierda.', 4000);
+                setTimeout(() => livenessPrompt.textContent = 'Procesando...', 6000);
+
+                // Simulate processing and show result
+                setTimeout(() => {
+                    stream.getTracks().forEach(track => track.stop());
+                    livenessCaptureDiv.classList.add('hidden');
+                    livenessResultDiv.classList.remove('hidden');
+                    const isSuccess = Math.random() > 0.1; // 90% success rate
+                    if (isSuccess) {
+                        livenessResultDiv.innerHTML = `
+                            <svg class="w-16 h-16 mx-auto text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                            <h3 class="mt-4 text-2xl font-bold text-green-600">Prueba de Vida Superada</h3>
+                            <p class="mt-2 text-gray-600">Presencia del usuario verificada con éxito.</p>
+                            <p class="mt-1 text-sm text-gray-500">Puntuación de Vida: 98.7%</p>
+                        `;
+                    } else {
+                         livenessResultDiv.innerHTML = `
+                            <svg class="w-16 h-16 mx-auto text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                            <h3 class="mt-4 text-2xl font-bold text-red-600">Prueba de Vida Fallida</h3>
+                            <p class="mt-2 text-gray-600">No se pudo verificar la presencia del usuario. Posible intento de suplantación de identidad detectado.</p>
+                        `;
+                    }
+                    livenessResultDiv.innerHTML += '<button onclick="location.reload()" class="mt-6 bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-300">Intentar de Nuevo</button>';
+                }, 7500);
+            });
+
+            // --- Face Match Logic ---
+            const facematchIdUpload = document.getElementById('facematch-id-upload');
+            const facematchIdPreview = document.getElementById('facematch-id-preview');
+            const facematchIdPlaceholder = document.getElementById('facematch-id-placeholder');
+            const facematchCaptureBtn = document.getElementById('facematch-capture-btn');
+            const facematchVerifyBtn = document.getElementById('facematch-verify-btn');
+            const facematchVideo = document.getElementById('facematch-video');
+            const facematchCanvas = document.getElementById('facematch-canvas');
+            const facematchResultDiv = document.getElementById('facematch-result');
+            let selfieTaken = false;
+            let idUploaded = false;
+
+            startCamera('facematch-video');
+
+            facematchIdUpload.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        facematchIdPreview.src = event.target.result;
+                        facematchIdPreview.classList.remove('hidden');
+                        facematchIdPlaceholder.classList.add('hidden');
+                        idUploaded = true;
+                        facematchCaptureBtn.disabled = false;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            facematchCaptureBtn.addEventListener('click', () => {
+                const context = facematchCanvas.getContext('2d');
+                facematchCanvas.width = facematchVideo.videoWidth;
+                facematchCanvas.height = facematchVideo.videoHeight;
+                context.translate(facematchCanvas.width, 0);
+                context.scale(-1, 1);
+                context.drawImage(facematchVideo, 0, 0, facematchCanvas.width, facematchCanvas.height);
+                
+                selfieTaken = true;
+                facematchCaptureBtn.textContent = '¡Selfie Capturada!';
+                facematchCaptureBtn.classList.remove('bg-gray-700', 'hover:bg-gray-800');
+                facematchCaptureBtn.classList.add('bg-green-600');
+                if (idUploaded) {
+                    facematchVerifyBtn.disabled = false;
+                }
+            });
+
+            facematchVerifyBtn.addEventListener('click', () => {
+                facematchResultDiv.classList.remove('hidden');
+                facematchResultDiv.innerHTML = '<div class="loader mx-auto"></div><p class="mt-2">Comparando rostros...</p>';
+
+                setTimeout(() => {
+                    const isMatch = Math.random() > 0.15; // 85% success rate
+                    if (isMatch) {
+                        facematchResultDiv.innerHTML = `
+                            <svg class="w-12 h-12 mx-auto text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                            <h4 class="mt-2 text-xl font-bold text-green-600">Coincidencia Encontrada</h4>
+                            <p class="text-gray-600">Puntuación de Similitud: 96.2%</p>
+                        `;
+                    } else {
+                        facematchResultDiv.innerHTML = `
+                            <svg class="w-12 h-12 mx-auto text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                            <h4 class="mt-2 text-xl font-bold text-red-600">No Hay Coincidencia</h4>
+                             <p class="text-gray-600">Puntuación de Similitud: 43.1%</p>
+                        `;
+                    }
+                }, 2500);
+            });
+
+
+            // --- Document Verification Logic ---
+            const docvVerifyBtn = document.getElementById('docv-verify-btn');
+            const docvResultDiv = document.getElementById('docv-result');
+            const docvCountrySelect = document.getElementById('docv-country');
+            const mockData = {
+                mx: { name: 'MARIA GUADALUPE', lastName: 'HERNANDEZ GARCIA', dob: '25/12/1990', address: 'AV. JUAREZ 123, CENTRO, 68000', id: 'HEGM90122512M12345' },
+                ar: { name: 'JUAN CARLOS', lastName: 'GOMEZ PEREZ', dob: '15/05/1988', address: 'AV. DE MAYO 456, BUENOS AIRES', id: '34.567.890' },
+                co: { name: 'SOFIA ISABEL', lastName: 'RODRIGUEZ LOPEZ', dob: '10/02/1995', address: 'CARRERA 7 # 14-78, BOGOTA', id: '1.234.567.890' },
+                pe: { name: 'ALEJANDRO JAVIER', lastName: 'QUISPE MENDOZA', dob: '30/07/1992', address: 'JR. DE LA UNION 789, LIMA', id: '76543210' },
+            };
+
+            docvVerifyBtn.addEventListener('click', () => {
+                docvResultDiv.classList.remove('hidden');
+                docvResultDiv.innerHTML = '<div class="loader mx-auto"></div><p class="mt-2 text-center">Verificando datos del documento...</p>';
+
+                setTimeout(() => {
+                    const country = docvCountrySelect.value;
+                    const data = mockData[country];
+                    docvResultDiv.innerHTML = `
+                        <div class="border border-green-300 bg-green-50 rounded-lg p-4">
+                            <h4 class="text-lg font-bold text-green-800 flex items-center">
+                                <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                                Documento Verificado
+                            </h4>
+                            <div class="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-gray-700">
+                                <div><strong>Nombre:</strong> ${data.name}</div>
+                                <div><strong>Apellido:</strong> ${data.lastName}</div>
+                                <div><strong>Fecha de Nacimiento:</strong> ${data.dob}</div>
+                                <div><strong>Número de ID:</strong> ${data.id}</div>
+                                <div class="col-span-2"><strong>Dirección:</strong> ${data.address}</div>
+                            </div>
+                        </div>
+                    `;
+                }, 2000);
+            });
+
+            // --- Age Detector Logic ---
+            const startAgeBtn = document.getElementById('start-age-btn');
+            const ageCaptureDiv = document.getElementById('age-capture');
+            const ageStartDiv = document.getElementById('age-start');
+            const ageCaptureBtn = document.getElementById('age-capture-btn');
+            const ageResultDiv = document.getElementById('age-result');
+
+            startAgeBtn.addEventListener('click', async () => {
+                ageStartDiv.classList.add('hidden');
+                ageCaptureDiv.classList.remove('hidden');
+                ageResultDiv.classList.add('hidden');
+                const stream = await startCamera('age-video');
+                 if (!stream) {
+                    ageStartDiv.classList.remove('hidden');
+                    ageCaptureDiv.classList.add('hidden');
+                }
+            });
+
+            ageCaptureBtn.addEventListener('click', () => {
+                const ageVideo = document.getElementById('age-video');
+                const ageCanvas = document.getElementById('age-canvas');
+                const context = ageCanvas.getContext('2d');
+                ageCanvas.width = ageVideo.videoWidth;
+                ageCanvas.height = ageVideo.videoHeight;
+                context.drawImage(ageVideo, 0, 0, ageCanvas.width, ageCanvas.height);
+                
+                ageResultDiv.classList.remove('hidden');
+                ageResultDiv.innerHTML = '<div class="loader mx-auto"></div><p class="mt-2">Estimando edad...</p>';
+
+                setTimeout(() => {
+                    const ageRanges = ['22-28', '29-35', '36-42', '43-50'];
+                    const randomAge = ageRanges[Math.floor(Math.random() * ageRanges.length)];
+                    ageResultDiv.innerHTML = `
+                        <h4 class="text-xl font-bold text-gray-800">Estimación de Edad Completa</h4>
+                        <p class="mt-2 text-4xl font-bold text-blue-600">${randomAge}</p>
+                        <p class="text-sm text-gray-500">años</p>
+                        <p class="mt-4 text-xs text-gray-400">Aviso: Esta es una estimación solo para fines de demostración.</p>
+                    `;
+                }, 1500);
+            });
+
+            // --- Device Intelligence Logic ---
+            const deviceInfoDiv = document.getElementById('device-info');
+            const deviceInfo = {
+                'User Agent': navigator.userAgent,
+                'Plataforma': navigator.platform,
+                'Resolución de Pantalla': `${screen.width}x${screen.height}`,
+                'Idioma del Navegador': navigator.language,
+                'Estado en Línea': navigator.onLine ? 'En línea' : 'Fuera de línea',
+                'Cookies Habilitadas': navigator.cookieEnabled,
+                'Dirección IP de Prueba': `200.48.225.${Math.floor(Math.random() * 254) + 1}`
+            };
+            let html = '';
+            for (const [key, value] of Object.entries(deviceInfo)) {
+                html += `
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="font-medium text-gray-600">${key}:</span>
+                        <span class="text-gray-800 bg-gray-100 px-2 py-1 rounded">${value}</span>
+                    </div>
+                `;
+            }
+            deviceInfoDiv.innerHTML = html;
+
+            // --- Verifiable Credentials Logic ---
+            const vcIssueBtn = document.getElementById('vc-issue-btn');
+            const vcIssuedResultDiv = document.getElementById('vc-issued-result');
+            const vcJwtCode = document.getElementById('vc-jwt-code');
+            const vcCopyBtn = document.getElementById('vc-copy-btn');
+            const vcVerifyInput = document.getElementById('vc-verify-input');
+            const vcVerifyBtn = document.getElementById('vc-verify-btn');
+            const vcVerifiedResultDiv = document.getElementById('vc-verified-result');
+
+            vcIssueBtn.addEventListener('click', () => {
+                const header = btoa(JSON.stringify({ alg: 'ES256K', typ: 'JWT' }));
+                const payload = btoa(JSON.stringify({
+                    iss: 'did:web:4i.digital',
+                    sub: `did:pkh:eip155:1:${'0x' + [...Array(40)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')}`,
+                    vc: {
+                        '@context': ['https://www.w3.org/2018/credentials/v1'],
+                        type: ['VerifiableCredential', 'VerifiedIdentity'],
+                        credentialSubject: { name: 'Alex Doe', dob: '1990-01-01' }
+                    },
+                    exp: Math.floor(Date.now() / 1000) + (60 * 60)
+                }));
+                const signature = btoa('mock-signature-bytes-' + Math.random());
+                const jwt = `${header}.${payload}.${signature}`;
+                
+                vcJwtCode.textContent = jwt;
+                vcIssuedResultDiv.classList.remove('hidden');
+            });
+
+            vcCopyBtn.addEventListener('click', () => {
+                const textarea = document.createElement('textarea');
+                textarea.value = vcJwtCode.textContent;
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    vcCopyBtn.textContent = '¡Copiado!';
+                } catch (err) {
+                    vcCopyBtn.textContent = 'Copia fallida';
+                }
+                document.body.removeChild(textarea);
+                setTimeout(() => { vcCopyBtn.textContent = 'Copiar al Portapapeles'; }, 2000);
+            });
+
+            vcVerifyBtn.addEventListener('click', () => {
+                vcVerifiedResultDiv.classList.remove('hidden');
+                vcVerifiedResultDiv.innerHTML = '<div class="loader mx-auto w-6 h-6"></div><p class="mt-2 text-center text-sm">Verificando...</p>';
+                
+                setTimeout(() => {
+                    const token = vcVerifyInput.value;
+                    if (token && token.split('.').length === 3) {
+                        try {
+                            const payload = JSON.parse(atob(token.split('.')[1]));
+                            vcVerifiedResultDiv.innerHTML = `
+                                <div class="border border-green-300 bg-green-50 rounded-lg p-4">
+                                    <h4 class="text-md font-bold text-green-800">Verificación Exitosa</h4>
+                                    <p class="text-sm mt-2"><strong>Emisor:</strong> ${payload.iss}</p>
+                                    <p class="text-sm"><strong>Sujeto:</strong> ${payload.sub.substring(0,25)}...</p>
+                                    <p class="text-sm"><strong>Tipo de Credencial:</strong> ${payload.vc.type.join(', ')}</p>
+                                    <pre class="bg-gray-100 text-xs p-2 mt-2 rounded overflow-x-auto text-gray-800">${JSON.stringify(payload.vc.credentialSubject, null, 2)}</pre>
+                                </div>
+                            `;
+                        } catch (e) {
+                             vcVerifiedResultDiv.innerHTML = `<div class="border border-red-300 bg-red-50 text-red-800 rounded-lg p-4 text-sm"><strong>Verificación Fallida:</strong> Payload del token inválido.</div>`;
+                        }
+                    } else {
+                        vcVerifiedResultDiv.innerHTML = `<div class="border border-red-300 bg-red-50 text-red-800 rounded-lg p-4 text-sm"><strong>Verificación Fallida:</strong> Formato JWT inválido.</div>`;
+                    }
+                }, 1500);
+            });
+
+        });
+    </script>
+
+</body>
+</html>
